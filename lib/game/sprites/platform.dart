@@ -4,10 +4,9 @@
 
 import 'dart:math';
 
+import 'package:doodle_dash/game/doodle_dash.dart';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-
-import '../doodle_dash.dart';
 
 /// The supertype for all Platforms, including Enemies
 /// This class adds a hitbox and Collision Callbacks to all subtypes,
@@ -40,14 +39,18 @@ abstract class Platform<T> extends SpriteGroupComponent<T>
 
     await add(hitbox);
 
-    final int rand = Random().nextInt(100);
-    if (rand > 80) isMoving = true;
+    final rand = Random().nextInt(100);
+    if (rand > 80) {
+      isMoving = true;
+    }
   }
 
   void _move(double dt) {
-    if (!isMoving) return;
+    if (!isMoving) {
+      return;
+    }
 
-    final double gameWidth = gameRef.size.x;
+    final gameWidth = gameRef.size.x;
 
     if (position.x <= 0) {
       direction = 1;
@@ -81,12 +84,13 @@ class NormalPlatform extends Platform<NormalPlatformState> {
 
   @override
   Future<void>? onLoad() async {
-    var randSpriteIndex = Random().nextInt(spriteOptions.length);
+    final randSpriteIndex = Random().nextInt(spriteOptions.length);
 
-    String randSprite = spriteOptions.keys.elementAt(randSpriteIndex);
+    final randSprite = spriteOptions.keys.elementAt(randSpriteIndex);
 
     sprites = {
-      NormalPlatformState.only: await gameRef.loadSprite('game/$randSprite.png')
+      NormalPlatformState.only:
+          await gameRef.loadSprite('game/$randSprite.png'),
     };
 
     current = NormalPlatformState.only;
@@ -146,10 +150,12 @@ class SpringBoard extends Platform<SpringState> {
 
   @override
   void onCollisionStart(
-      Set<Vector2> intersectionPoints, PositionComponent other) {
+    Set<Vector2> intersectionPoints,
+    PositionComponent other,
+  ) {
     super.onCollisionStart(intersectionPoints, other);
 
-    bool isCollidingVertically =
+    final isCollidingVertically =
         (intersectionPoints.first.y - intersectionPoints.last.y).abs() < 5;
 
     if (isCollidingVertically) {
@@ -172,8 +178,8 @@ class EnemyPlatform extends Platform<EnemyPlatformState> {
 
   @override
   Future<void>? onLoad() async {
-    var randBool = Random().nextBool();
-    var enemySprite = randBool ? 'enemy_trash_can' : 'enemy_error';
+    final randBool = Random().nextBool();
+    final enemySprite = randBool ? 'enemy_trash_can' : 'enemy_error';
 
     sprites = <EnemyPlatformState, Sprite>{
       EnemyPlatformState.only:

@@ -2,13 +2,10 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-import 'dart:io' show Platform;
+import 'package:doodle_dash/game/doodle_dash.dart';
+import 'package:doodle_dash/game/widgets/widgets.dart';
 import 'package:flame/game.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
-
-import '../doodle_dash.dart';
-import 'widgets.dart';
 
 class GameOverlay extends StatefulWidget {
   const GameOverlay(this.game, {super.key});

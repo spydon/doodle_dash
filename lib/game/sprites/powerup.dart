@@ -2,10 +2,9 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:doodle_dash/game/doodle_dash.dart';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-
-import '../doodle_dash.dart';
 
 abstract class PowerUp extends SpriteComponent
     with HasGameRef<DoodleDash>, CollisionCallbacks {

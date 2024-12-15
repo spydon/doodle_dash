@@ -2,13 +2,13 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:doodle_dash/game/managers/managers.dart';
+import 'package:doodle_dash/game/parallax_background.dart';
+import 'package:doodle_dash/game/sprites/sprites.dart';
+import 'package:flame/experimental.dart';
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 import 'package:flutter/material.dart';
-
-import './world.dart';
-import 'managers/managers.dart';
-import 'sprites/sprites.dart';
 
 enum Character { dash, sparky }
 
@@ -16,7 +16,7 @@ class DoodleDash extends FlameGame
     with HasKeyboardHandlerComponents, HasCollisionDetection {
   DoodleDash({super.children});
 
-  final World _world = World();
+  final ParallaxBackground _background = ParallaxBackground();
   LevelManager levelManager = LevelManager();
   GameManager gameManager = GameManager();
   int screenBufferSpace = 300;
@@ -26,7 +26,7 @@ class DoodleDash extends FlameGame
 
   @override
   Future<void> onLoad() async {
-    await add(_world);
+    await add(_background);
 
     await add(gameManager);
 
@@ -51,25 +51,25 @@ class DoodleDash extends FlameGame
     if (gameManager.isPlaying) {
       checkLevelUp();
 
-      final Rect worldBounds = Rect.fromLTRB(
+      final worldBounds = Rectangle.fromLTRB(
         0,
-        camera.position.y - screenBufferSpace,
-        camera.gameSize.x,
-        camera.position.y + _world.size.y,
+        camera.viewfinder.position.y - screenBufferSpace,
+        size.x,
+        camera.viewfinder.position.y + _background.size.y,
       );
-      camera.worldBounds = worldBounds;
+      camera.setBounds(worldBounds);
       if (player.isMovingDown) {
-        camera.worldBounds = worldBounds;
+        camera.setBounds(worldBounds);
       }
 
-      var isInTopHalfOfScreen = player.position.y <= (_world.size.y / 2);
+      final isInTopHalfOfScreen = player.position.y <= (_background.size.y / 2);
       if (!player.isMovingDown && isInTopHalfOfScreen) {
-        camera.followComponent(player);
+        camera.follow(player);
       }
 
       if (player.position.y >
-          camera.position.y +
-              _world.size.y +
+          camera.viewfinder.position.y +
+              _background.size.y +
               player.size.y +
               screenBufferSpace) {
         onLose();
@@ -87,25 +87,28 @@ class DoodleDash extends FlameGame
 
     gameManager.reset();
 
-    if (children.contains(objectManager)) objectManager.removeFromParent();
+    if (children.contains(objectManager)) {
+      objectManager.removeFromParent();
+    }
 
     levelManager.reset();
 
-    player.reset();
-    camera.worldBounds = Rect.fromLTRB(
-      0,
-      -_world.size.y, // top of screen is 0, so negative is already off screen
-      camera.gameSize.x,
-      _world.size.y +
-          screenBufferSpace, // makes sure bottom bound of game is below bottom of screen
+    camera.setBounds(
+      Rectangle.fromLTRB(
+        0,
+        // top of screen is 0, so negative is already off screen
+        -_background.size.y,
+        size.x,
+        // makes sure bottom bound of game is below bottom of screen
+        _background.size.y + screenBufferSpace,
+      ),
     );
-    camera.followComponent(player);
-
-    player.resetPosition();
+    camera.follow(player);
 
     objectManager = ObjectManager(
-        minVerticalDistanceToNextPlatform: levelManager.minDistance,
-        maxVerticalDistanceToNextPlatform: levelManager.maxDistance);
+      minVerticalDistanceToNextPlatform: levelManager.minDistance,
+      maxVerticalDistanceToNextPlatform: levelManager.maxDistance,
+    );
 
     add(objectManager);
 
@@ -151,7 +154,7 @@ class DoodleDash extends FlameGame
 
       objectManager.configure(levelManager.level, levelManager.difficulty);
 
-      player.setJumpSpeed(levelManager.jumpSpeed);
+      player.jumpSpeed = levelManager.jumpSpeed;
     }
   }
 }

@@ -2,13 +2,12 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:doodle_dash/game/doodle_dash.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 
-import '../doodle_dash.dart';
-
 class ScoreDisplay extends StatelessWidget {
-  const ScoreDisplay({super.key, required this.game, this.isLight = false});
+  const ScoreDisplay({required this.game, super.key, this.isLight = false});
 
   final Game game;
   final bool isLight;
@@ -19,7 +18,7 @@ class ScoreDisplay extends StatelessWidget {
       valueListenable: (game as DoodleDash).gameManager.score,
       builder: (context, value, child) {
         return Text('Score: $value',
-            style: Theme.of(context).textTheme.displaySmall!);
+            style: Theme.of(context).textTheme.displaySmall,);
       },
     );
   }

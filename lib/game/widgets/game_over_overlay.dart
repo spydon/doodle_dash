@@ -2,11 +2,10 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:doodle_dash/game/doodle_dash.dart';
+import 'package:doodle_dash/game/widgets/widgets.dart';
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
-
-import '../doodle_dash.dart';
-import 'widgets.dart';
 
 // Overlay that pops up when the game ends
 class GameOverOverlay extends StatelessWidget {
@@ -17,13 +16,12 @@ class GameOverOverlay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Theme.of(context).colorScheme.background,
+      color: Theme.of(context).colorScheme.surface,
       child: Center(
         child: Padding(
           padding: const EdgeInsets.all(48.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
                 'Game Over',
@@ -42,11 +40,11 @@ class GameOverOverlay extends StatelessWidget {
                   (game as DoodleDash).resetGame();
                 },
                 style: ButtonStyle(
-                  minimumSize: MaterialStateProperty.all(
+                  minimumSize: WidgetStateProperty.all(
                     const Size(200, 75),
                   ),
-                  textStyle: MaterialStateProperty.all(
-                      Theme.of(context).textTheme.titleLarge),
+                  textStyle: WidgetStateProperty.all(
+                      Theme.of(context).textTheme.titleLarge,),
                 ),
                 child: const Text('Play Again'),
               ),

@@ -4,12 +4,11 @@
 
 import 'dart:async';
 
+import 'package:doodle_dash/game/doodle_dash.dart';
+import 'package:doodle_dash/game/sprites/sprites.dart';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/services.dart';
-
-import '../doodle_dash.dart';
-import 'sprites.dart';
 
 enum PlayerState {
   left,
@@ -24,8 +23,8 @@ enum PlayerState {
 class Player extends SpriteGroupComponent<PlayerState>
     with HasGameRef<DoodleDash>, KeyboardHandler, CollisionCallbacks {
   Player({
-    super.position,
     required this.character,
+    super.position,
     this.jumpSpeed = 600,
   }) : super(
           size: Vector2(79, 109),
@@ -38,7 +37,7 @@ class Player extends SpriteGroupComponent<PlayerState>
   final int movingRightInput = 1;
   Vector2 _velocity = Vector2.zero();
   bool get isMovingDown => _velocity.y > 0;
-  Character character;
+  final Character character;
   double jumpSpeed;
   final double _gravity = 9;
 
@@ -54,16 +53,18 @@ class Player extends SpriteGroupComponent<PlayerState>
 
   @override
   void update(double dt) {
-    if (gameRef.gameManager.isIntro || gameRef.gameManager.isGameOver) return;
+    if (gameRef.gameManager.isIntro || gameRef.gameManager.isGameOver) {
+      return;
+    }
 
     _velocity.x = _hAxisInput * jumpSpeed;
 
-    final double dashHorizontalCenter = size.x / 2;
+    final dashHorizontalCenter = size.x / 2;
 
     if (position.x < dashHorizontalCenter) {
-      position.x = gameRef.size.x - (dashHorizontalCenter);
+      position.x = gameRef.size.x - dashHorizontalCenter;
     }
-    if (position.x > gameRef.size.x - (dashHorizontalCenter)) {
+    if (position.x > gameRef.size.x - dashHorizontalCenter) {
       position.x = dashHorizontalCenter;
     }
 
@@ -75,7 +76,7 @@ class Player extends SpriteGroupComponent<PlayerState>
   }
 
   @override
-  bool onKeyEvent(RawKeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
+  bool onKeyEvent(KeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
     _hAxisInput = 0;
 
     if (keysPressed.contains(LogicalKeyboardKey.arrowLeft)) {
@@ -142,7 +143,7 @@ class Player extends SpriteGroupComponent<PlayerState>
       return;
     }
 
-    bool isCollidingVertically =
+    final isCollidingVertically =
         (intersectionPoints.first.y - intersectionPoints.last.y).abs() < 5;
 
     if (isMovingDown && isCollidingVertically) {
@@ -167,9 +168,15 @@ class Player extends SpriteGroupComponent<PlayerState>
       jump(specialJumpSpeed: jumpSpeed * other.jumpSpeedMultiplier);
       return;
     } else if (!hasPowerup && other is NooglerHat) {
-      if (current == PlayerState.center) current = PlayerState.nooglerCenter;
-      if (current == PlayerState.left) current = PlayerState.nooglerLeft;
-      if (current == PlayerState.right) current = PlayerState.nooglerRight;
+      if (current == PlayerState.center) {
+        current = PlayerState.nooglerCenter;
+      }
+      if (current == PlayerState.left) {
+        current = PlayerState.nooglerLeft;
+      }
+      if (current == PlayerState.right) {
+        current = PlayerState.nooglerRight;
+      }
       other.removeFromParent();
       _removePowerupAfterTime(other.activeLengthInMS);
       jump(specialJumpSpeed: jumpSpeed * other.jumpSpeedMultiplier);
@@ -185,10 +192,6 @@ class Player extends SpriteGroupComponent<PlayerState>
     Future.delayed(Duration(milliseconds: ms), () {
       current = PlayerState.center;
     });
-  }
-
-  void setJumpSpeed(double newJumpSpeed) {
-    jumpSpeed = newJumpSpeed;
   }
 
   void reset() {

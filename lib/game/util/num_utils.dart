@@ -10,8 +10,12 @@ class Range {
   Range(this.start, this.end);
 
   bool overlaps(Range other) {
-    if (other.start > start && other.start < end) return true;
-    if (other.end > end && other.end < end) return true;
+    if (other.start > start && other.start < end) {
+      return true;
+    }
+    if (other.end > end && other.end < end) {
+      return true;
+    }
     return false;
   }
 
@@ -32,7 +36,8 @@ class ProbabilityGenerator {
   ProbabilityGenerator();
 
   bool generateWithProbability(double percent) {
-    var randomInt = _rand.nextInt(100) + 1; // generate a number 1-100 inclusive
+    // generate a number 1-100 inclusive
+    final randomInt = _rand.nextInt(100) + 1;
 
     if (randomInt <= percent) {
       return true;

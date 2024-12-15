@@ -2,9 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:doodle_dash/game/doodle_dash.dart';
 import 'package:flame/components.dart';
-
-import '../doodle_dash.dart';
 
 // It won't be a detailed section of the codelab, as its not Flame specific
 class LevelManager extends Component with HasGameRef<DoodleDash> {
@@ -18,15 +17,15 @@ class LevelManager extends Component with HasGameRef<DoodleDash> {
   // Score indicates the score needed to be acheived to "level up"
   final Map<int, Difficulty> levelsConfig = {
     1: const Difficulty(
-        minDistance: 200, maxDistance: 300, jumpSpeed: 600, score: 0),
+        minDistance: 200, maxDistance: 300, jumpSpeed: 600, score: 0,),
     2: const Difficulty(
-        minDistance: 200, maxDistance: 400, jumpSpeed: 650, score: 20),
+        minDistance: 200, maxDistance: 400, jumpSpeed: 650, score: 20,),
     3: const Difficulty(
-        minDistance: 200, maxDistance: 500, jumpSpeed: 700, score: 40),
+        minDistance: 200, maxDistance: 500, jumpSpeed: 700, score: 40,),
     4: const Difficulty(
-        minDistance: 200, maxDistance: 600, jumpSpeed: 750, score: 80),
+        minDistance: 200, maxDistance: 600, jumpSpeed: 750, score: 80,),
     5: const Difficulty(
-        minDistance: 200, maxDistance: 700, jumpSpeed: 800, score: 100),
+        minDistance: 200, maxDistance: 700, jumpSpeed: 800, score: 100,),
   };
 
   double get minDistance {
@@ -50,7 +49,7 @@ class LevelManager extends Component with HasGameRef<DoodleDash> {
   }
 
   bool shouldLevelUp(int score) {
-    int nextLevel = level + 1;
+    final nextLevel = level + 1;
 
     if (levelsConfig.containsKey(nextLevel)) {
       return levelsConfig[nextLevel]!.score == score;
@@ -96,5 +95,5 @@ class Difficulty {
       {required this.minDistance,
       required this.maxDistance,
       required this.jumpSpeed,
-      required this.score});
+      required this.score,});
 }

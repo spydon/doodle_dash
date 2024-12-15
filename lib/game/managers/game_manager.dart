@@ -2,10 +2,9 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+import 'package:doodle_dash/game/doodle_dash.dart';
 import 'package:flame/components.dart';
 import 'package:flutter/material.dart';
-
-import '../doodle_dash.dart';
 
 // It won't be a detailed section of the codelab, as its not Flame specific
 class GameManager extends Component with HasGameRef<DoodleDash> {
@@ -26,10 +25,6 @@ class GameManager extends Component with HasGameRef<DoodleDash> {
 
   void increaseScore() {
     score.value++;
-  }
-
-  void selectCharacter(Character selectedCharacter) {
-    character = selectedCharacter;
   }
 }
 
